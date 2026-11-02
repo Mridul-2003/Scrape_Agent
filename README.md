@@ -10,6 +10,8 @@ A Streamlit application that uses a language model and a web scraping tool to ex
 - Show run logs and optionally include scraped page content in those logs.
 - Select Gemini, Groq, or Ollama as the model provider.
 
+[![Architecture diagram of mridul-2003/scrape_agent](https://gitdiagram.com/mridul-2003/scrape_agent/diagram.png)](https://gitdiagram.com/mridul-2003/scrape_agent?utm_source=readme&utm_medium=picture)
+
 ## Requirements
 
 - Python 3.12 or newer
