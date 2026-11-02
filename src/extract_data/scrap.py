@@ -1,4 +1,5 @@
 import json
+import random
 from collections.abc import Callable
 from urllib.parse import urljoin, urlparse
 import os
@@ -14,6 +15,7 @@ logging.basicConfig(level=logging.INFO,format="%(asctime)s - %(levelname)s - %(m
 logging.getLogger("requests").setLevel(logging.WARNING)
 load_dotenv()
 llm_provider = os.getenv("LLM_PROVIDER")
+proxy_file="proxies.txt"
 
 
 @tool
@@ -23,8 +25,17 @@ def scrape_page(url: str):
     if parsed_url.scheme not in {"http", "https"} or not parsed_url.hostname:
         raise ValueError("Enter a complete URL beginning with http:// or https://.")
 
+    with open(proxy_file, "r") as f:
+        proxies = [line.strip() for line in f if line.strip()]
+
+    proxy = random.choice(proxies)
+
     response = requests.get(
         url,
+        proxies={
+            "http": proxy,
+            "https": proxy,
+        },
         headers={"User-Agent": "Mozilla/5.0 (compatible; ExtractData/1.0)"},
     )
     response.raise_for_status()
