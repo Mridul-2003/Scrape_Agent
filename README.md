@@ -95,7 +95,7 @@ The provider model identifiers are configured in `scrap.py`.
 ```text
 .
 ├── app.py                  # Streamlit interface
-├── scrap.py                # Scraping tool and model-driven extraction flow
+├── src/extract_data/scrap.py# Scraping tool and model-driven extraction flow
 ├── pyproject.toml          # Project metadata and dependencies
 ├── requirements.txt        # Pip dependencies
 └── src/extract_data/       # Python package
