@@ -8,8 +8,10 @@ from dotenv import load_dotenv
 from langchain.messages import HumanMessage, SystemMessage, ToolMessage
 from langchain.tools import tool
 from langchain.chat_models import init_chat_model
-from langchain_ollama import ChatOllama
+import logging
 
+logging.basicConfig(level=logging.INFO,format="%(asctime)s - %(levelname)s - %(message)s")
+logging.getLogger("requests").setLevel(logging.WARNING)
 load_dotenv()
 llm_provider = os.getenv("LLM_PROVIDER")
 
@@ -287,6 +289,7 @@ def scrape_agent(
         log("Agent is inspecting page content for pagination.")
         active_model = first_turn_model if pages_scraped == 0 and len(messages) == 2 else model_with_tools
         response = active_model.invoke(messages)
+        logging.info(f"Response:{response}")
         messages.append(response)
         if not response.tool_calls:
             print(f"No tool Call")
@@ -304,23 +307,28 @@ def scrape_agent(
             ):
                 tool_result = "URL not fetched: it is invalid, repeated, off-domain, or the page limit was reached."
                 log(f"Skipped page {requested_url}: {tool_result}")
+                logging.info(f"Skipped page {requested_url}: {tool_result}")
             else:
                 seen_urls.add(requested_url)
                 pages_scraped += 1
                 log(f"Fetching page {pages_scraped}: {requested_url}")
+                logging.info(f"Fetching page {pages_scraped}: {requested_url}")
                 try:
                     tool_result = scrape_page.invoke({"url": requested_url})
                     if not tool_result:
                         tool_result = "No readable text found on this page."
                     log(f"Fetched page {pages_scraped}: {len(tool_result):,} characters")
+                    logging.info(f"Fetched page {pages_scraped}: {len(tool_result):,} characters")
                     if include_page_text_in_logs:
                         log(f"Content sent to agent from {requested_url}:\n{tool_result}")
+                        logging.info(f"Content sent to agent from {requested_url}:\n{tool_result}")
                 except Exception as error:
                     tool_result = f"Could not scrape this page: {error}"
                     log(f"Failed to fetch {requested_url}: {error}")
+                    logging.info(f"Failed to scrape {requested_url}: {error}")
 
             messages.append(
-                ToolMessage(
+                ToolMessage(#type:ignore[index]
                     content=str(tool_result),
                     tool_call_id=tool_call["id"],
                 )
