@@ -18,6 +18,9 @@ dependencies = [
     "python-dotenv>=1.2.4",
     "requests>=2.34.2",
     "streamlit>=1.66.1",
+    "selenium>=4.52.0",
+    "undetected-chromedriver>=3.5.5",
+    "setuptools>=68",
 ]
 
 [project.scripts]

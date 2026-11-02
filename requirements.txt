@@ -8,3 +8,6 @@ langchain-google-genai
 langchain-openai
 langchain-groq
 langchain-ollama
+selenium
+undetected-chromedriver
+setuptools>=68
